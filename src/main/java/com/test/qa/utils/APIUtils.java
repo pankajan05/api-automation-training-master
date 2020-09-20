@@ -1,5 +1,8 @@
 package com.test.qa.utils;
 
+import io.restassured.response.Response;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -19,11 +22,16 @@ public class APIUtils {
     }
 
     public static void printResults(Response response){
-        //Print Response
+        System.out.println(Constants.RESPONSE_BREAKER);
+        System.out.println(Constants.RESPOINSE_CODE_TEXT + response.getStatusCode());
+        System.out.println(Constants.RESPOINSE_DATA_TEXT + response.asString());
+        System.out.println(Constants.RESPOINSE_TIME_TEXT + response.time());
+        System.out.println(Constants.RESPONSE_BREAKER);
+
     }
 
-    public static String extractResponse() {
-        //Extract Key From Response
-        return "";
+    public static String extractResponse(Response response, String key) {
+        JSONObject obj = new JSONObject(response.asString());
+        return obj.get(key).toString();
     }
 }
