@@ -1,5 +1,7 @@
 package com.test.qa.utils;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.response.Response;
 import org.json.JSONObject;
 
@@ -33,5 +35,14 @@ public class APIUtils {
     public static String extractResponse(Response response, String key) {
         JSONObject obj = new JSONObject(response.asString());
         return obj.get(key).toString();
+    }
+
+    public static Object getObject(String response, Class c) {
+        try{
+            return new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false).readValue(response,c);
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
