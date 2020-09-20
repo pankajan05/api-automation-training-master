@@ -1,30 +1,34 @@
 package com.test.qa.sampleRequest;
 
+import com.test.qa.utils.Constants;
+import io.restassured.response.Response;
 import org.testng.annotations.Test;
-import org.testng.asserts.SoftAssert;
 
 import com.test.qa.utils.APIUtils;
-import com.test.qa.utils.Constants;
+import org.testng.asserts.SoftAssert;
 
-import java.util.HashMap;
+
+import static io.restassured.RestAssured.*;
 
 public class PetProject {
 
-    @Test(priority = 1)
+    @Test(priority = 1, groups = { "regression"})
     public void testResponseCode(){
         SoftAssert softAssert = new SoftAssert();
-        //Response response = get(Constants.BASE_URL_WEATHER+Constants.ENDPOINT_WEATHER+Constants.QUERY_PARAMETER);
-        //softAssert.assertEquals(response.getStatusCode(), 200, Constants.INVALID_CODE_TEXT);
-        //APIUtils.printResults(response);
+        Response response = get(Constants.BASE_URL_WEATHER+Constants.ENDPOINT_WEATHER+Constants.QUERY_PARAMETER);
+        softAssert.assertEquals(response.getStatusCode(), 200, Constants.INVALID_CODE_TEXT);
+        APIUtils.printResults(response);
         softAssert.assertAll();
     }
 
-    @Test(priority = 2)
+    @Test(priority = 2, groups = { "regression", "smoke"})
     public void testPostRequest(){
         SoftAssert softAssert = new SoftAssert();
-        //Todo - Send Post Request
-        //Todo - Assert Response Status Code
-        //Todo - Print Response
+        String body = APIUtils.readBody(Constants.BODY_PATH + "petpost.json");
+        Response response = given().header(Constants.HEADER_CONTENT_TYPE,
+                Constants.HEADER_CONTENT_VAL_JSON).body(body).when().post(Constants.BASE_URL_PETSTORE +Constants.ENDPOINT_PET);
+        softAssert.assertEquals(response.getStatusCode(), 200, Constants.INVALID_CODE_TEXT);
+        APIUtils.printResults(response);
         softAssert.assertAll();
     }
 
